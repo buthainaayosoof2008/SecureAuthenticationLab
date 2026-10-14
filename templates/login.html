@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign In | SecureAuth Lab</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            background: #0b1020;
+            color: #f1f5f9;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            padding: 36px;
+            background: #121a2e;
+            border: 1px solid #29334b;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px #0005;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .logo span { color: #a78bfa; }
+
+        .subtitle {
+            text-align: center;
+            color: #a8b2c8;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 14px;
+            color: #dbe3f2;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #39445f;
+            border-radius: 9px;
+            background: #0b1020;
+            color: white;
+            outline: none;
+        }
+
+        input:focus { border-color: #a78bfa; }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 0;
+            border-radius: 9px;
+            background: #8b5cf6;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #7c3aed; }
+
+        .message {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            background: #31243a;
+            color: #fca5a5;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #123328;
+            color: #86efac;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #a8b2c8;
+            font-size: 14px;
+        }
+
+        a { color: #c4b5fd; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="logo">Secure<span>Auth</span> Lab</div>
+        <p class="subtitle">Sign in to access your dashboard.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ 'success' if category == 'success' else '' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label for="username">Username</label>
+            <input
+                id="username"
+                name="username"
+                type="text"
+                maxlength="30"
+                autocomplete="username"
+                placeholder="Enter your username"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                maxlength="128"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="submit">Sign In</button>
+        </form>
+
+        <p class="footer">
+            Don't have an account?
+            <a href="{{ url_for('register') }}">Create one</a>
+        </p>
+    </main>
+</body>
+</html>

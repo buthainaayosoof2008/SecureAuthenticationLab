@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | Secure Authentication Lab</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: #080b16;
+            --card: #111629;
+            --border: #282f4b;
+            --purple: #9b72ff;
+            --purple-light: #b9a0ff;
+            --text: #f5f5ff;
+            --muted: #a0a8c3;
+            --success: #48d597;
+            --danger: #ff7185;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 16px;
+            background:
+                radial-gradient(
+                    circle at 15% 15%,
+                    rgba(105, 62, 200, 0.20),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 85% 85%,
+                    rgba(52, 89, 190, 0.15),
+                    transparent 35%
+                ),
+                var(--background);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            width: 66px;
+            height: 66px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(185, 160, 255, 0.5);
+            border-radius: 20px;
+            background: rgba(155, 114, 255, 0.13);
+            box-shadow: 0 0 30px rgba(155, 114, 255, 0.12);
+            font-size: 31px;
+        }
+
+        .brand h1 {
+            font-size: 27px;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .brand h1 span {
+            color: var(--purple-light);
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .card {
+            padding: 32px;
+            background: rgba(17, 22, 41, 0.97);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+        }
+
+        .card h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #e4e7f7;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 15px;
+            background: #0b1020;
+            border: 1px solid #303753;
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input::placeholder {
+            color: #68718d;
+        }
+
+        input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(155, 114, 255, 0.13);
+        }
+
+        .password-input {
+            padding-right: 76px !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--purple-light);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .password-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .password-check span {
+            font-size: 15px;
+        }
+
+        .password-check.valid {
+            color: var(--success);
+        }
+
+        .password-check.invalid {
+            color: var(--danger);
+        }
+
+        .alert {
+            padding: 12px 14px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .alert.success {
+            background: rgba(72, 213, 151, 0.10);
+            border: 1px solid rgba(72, 213, 151, 0.3);
+            color: var(--success);
+        }
+
+        .alert.error {
+            background: rgba(255, 113, 133, 0.10);
+            border: 1px solid rgba(255, 113, 133, 0.3);
+            color: #ff9ba9;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 7px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(110deg, #8055ed, #a17aff);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(128, 85, 237, 0.3);
+        }
+
+        .submit-btn:focus-visible,
+        .toggle-password:focus-visible {
+            outline: 2px solid white;
+            outline-offset: 3px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 23px 0;
+            color: #77809d;
+            font-size: 11px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: var(--border);
+        }
+
+        .login-link {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .login-link a {
+            color: var(--purple-light);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 13px;
+            border: 1px solid rgba(72, 213, 151, 0.18);
+            border-radius: 10px;
+            background: rgba(72, 213, 151, 0.04);
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .security-note strong {
+            color: var(--success);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 22px;
+            color: #69728e;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 20px;
+            }
+
+            .brand h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <header class="brand">
+            <div class="logo" aria-hidden="true">🔐</div>
+            <h1>Secure<span>Auth</span></h1>
+            <p>Secure Authentication Lab</p>
+        </header>
+
+        <section class="card">
+            <h2>Create your account</h2>
+            <p class="subtitle">
+                Join the lab and explore secure authentication practices.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert {{ 'success' if category == 'success' else 'error' }}"
+                             role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('register') }}" method="POST">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        minlength="3"
+                        maxlength="30"
+                        pattern="[A-Za-z0-9_]+"
+                        title="Use only letters, numbers, and underscores. Minimum 3 characters."
+                        autocomplete="username"
+                        required
+                    >
+                    <p class="hint">
+                        Use 3–30 characters: letters, numbers, or underscores.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="password-input"
+                            placeholder="Create a strong password"
+                            minlength="12"
+                            maxlength="128"
+                            autocomplete="new-password"
+                            aria-describedby="password-hint password-rules"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="togglePassword"
+                            aria-controls="password"
+                            aria-pressed="false"
+                        >
+                            Show
+                        </button>
+                    </div>
+
+                    <p class="hint" id="password-hint">
+                        Use at least 12 characters. A longer, unique password is recommended.
+                    </p>
+
+                    <div class="password-check" id="lengthCheck">
+                        <span aria-hidden="true">○</span>
+                        <span>At least 12 characters</span>
+                    </div>
+
+                    <div class="password-check" id="numberCheck">
+                        <span aria-hidden="true">○</span>
+                        <span>Contains a number</span>
+                    </div>
+
+                    <div class="password-check" id="letterCheck">
+                        <span aria-hidden="true">○</span>
+                        <span>Contains a letter</span>
+                    </div>
+
+                    <div class="password-check" id="password-rules">
+                        <span aria-hidden="true">ℹ</span>
+                        <span>These indicators are guidance; the server must enforce its own password rules.</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Create Account →
+                </button>
+
+            </form>
+
+            <div class="divider">ALREADY REGISTERED?</div>
+
+            <p class="login-link">
+                Have an account?
+                <a href="{{ url_for('login') }}">Sign in here</a>
+            </p>
+
+            <div class="security-note">
+                <span aria-hidden="true">🛡️</span>
+                <div>
+                    <strong>Security matters</strong><br>
+                    Your password should be unique. This lab is for learning and should not be used for real accounts.
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            Secure Authentication Lab<br>
+            Educational cybersecurity project
+        </footer>
+
+    </main>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", function () {
+            const isHidden = passwordInput.type === "password";
+
+            passwordInput.type = isHidden ? "text" : "password";
+            togglePassword.textContent = isHidden ? "Hide" : "Show";
+            togglePassword.setAttribute("aria-pressed", String(isHidden));
+        });
+
+        function updateCheck(elementId, isValid) {
+            const element = document.getElementById(elementId);
+            const icon = element.querySelector("span");
+
+            element.classList.toggle("valid", isValid);
+            element.classList.toggle("invalid", !isValid);
+            icon.textContent = isValid ? "✓" : "○";
+        }
+
+        passwordInput.addEventListener("input", function () {
+            const password = passwordInput.value;
+
+            updateCheck("lengthCheck", password.length >= 12);
+            updateCheck("numberCheck", /\d/.test(password));
+            updateCheck("letterCheck", /[A-Za-z]/.test(password));
+        });
+    </script>
+</body>
+</html>
